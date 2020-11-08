@@ -3,15 +3,19 @@ FROM alpine:3.6
 LABEL description="Docker container for running your own Syncthing Discovery Server."
 
 ARG VERSION=v1.8.0
+ARG CONTAINER_PACKAGE_URL
+ARG BUILD_HOST=https://github.com/syncthing/discosrv/releases/download/${VERSION}
+ARG BUILD_FILE_NAME=stdiscosrv-linux-amd64-${VERSION}
 
-ENV BUILD_HOST=https://github.com/syncthing/discosrv/releases/download/${version}
-ENV BUILD_FILE_NAME=stdiscosrv-linux-amd64-${version}
 ENV STDISCOSRV_ROOT=/workspace
 
 VOLUME $STDISCOSRV_ROOT
 
-RUN apk add --update libc6-compat libstdc++ \
-  && apk upgrade \
+RUN if [ $CONTAINER_PACKAGE_URL ] ; then \
+      sed -i "s/dl-cdn.alpinelinux.org/${CONTAINER_PACKAGE_URL}/g" /etc/apk/repositories ; \
+    fi \
+  && apk update \
+  && apk add --update libc6-compat libstdc++ \
   && apk add --no-cache --virtual build ca-certificates wget \
   && update-ca-certificates \
   && wget -P /tmp ${BUILD_HOST}/${BUILD_FILE_NAME}.tar.gz \

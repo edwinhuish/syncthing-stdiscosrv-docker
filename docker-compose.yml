@@ -7,9 +7,9 @@ services:
   syncthing-stdiscosrv:
     image: syncthing/stdiscosrv
     build:
-      environment: 
       args: 
         VERSION: ${VERSION}
+        CONTAINER_PACKAGE_URL: ${CONTAINER_PACKAGE_URL}
       context: ./builder
     container_name: syncthing-stdiscosrv
     volumes:
