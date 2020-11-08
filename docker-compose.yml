@@ -1,0 +1,20 @@
+version: '3'
+
+networks:
+  default:
+
+services:
+  syncthing-stdiscosrv:
+    image: syncthing/stdiscosrv
+    build:
+      environment: 
+      args: 
+        VERSION: ${VERSION}
+      context: ./builder
+    container_name: syncthing-stdiscosrv
+    volumes:
+      - ./workspace:/workspace
+    ports:
+      - 8443:8443
+    networks:
+      - default
